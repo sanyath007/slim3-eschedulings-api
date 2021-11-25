@@ -12,11 +12,6 @@ class Person extends Model
     public $incrementing = false; //ไม่ใช้ options auto increment
     public $timestamps = false; //ไม่ใช้ field updated_at และ created_at
 
-    public function nurse()
-    {
-        return $this->hasOne(Nurse::class);
-    }
-
     public function prefix()
     {
         return $this->belongsTo(Prefix::class, 'person_prefix', 'prefix_id');

@@ -49,8 +49,8 @@ $app->group('/api', function(Slim\App $app) {
     $app->get('/departs', 'DepartController:getAll');
     $app->get('/departs/{id}', 'DepartController:getById');
 
-    $app->get('/persons', 'StaffController:getAll');
-    $app->get('/persons/{id}', 'StaffController:getById');
+    $app->get('/persons', 'PersonController:getAll');
+    $app->get('/persons/{id}', 'PersonController:getById');
 });
 
 // Catch-all route to serve a 404 Not Found page if none of the routes match

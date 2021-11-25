@@ -8,24 +8,25 @@ use App\Models\Person;
 
 class PersonController extends Controller
 {
-    // public function getAll($request, $response, $args)
-    // {
-    //     $page = (int)$request->getQueryParam('page');
-    //     $link = 'http://localhost'. $request->getServerParam('REDIRECT_URL');
+    public function getAll($request, $response, $args)
+    {
+        $page = (int)$request->getQueryParam('page');
 
-    //     $model = Registration::where('book_status', '=', 0)
-    //                 ->with('an','an.patient','an.ward','room','user')
-    //                 ->orderBy('book_id');
+        $model = Person::whereNotIn('person_state', [6,7,8,9,99])
+                    ->join('level', 'personal.person_id', '=', 'level.person_id')
+                    ->where('level.faction_id', '5')
+                    ->with('prefix','position','academic')
+                    ->with('memberOf','memberOf.depart');
 
-    //     $reg = paginate($model, 10, $page, $link);
+        $reg = paginate($model, 10, $page, $request);
         
-    //     $data = json_encode($reg, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+        $data = json_encode($reg, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
-    //     return $response
-    //             ->withStatus(200)
-    //             ->withHeader("Content-Type", "application/json")
-    //             ->write($data);
-    // }
+        return $response
+                ->withStatus(200)
+                ->withHeader("Content-Type", "application/json")
+                ->write($data);
+    }
     
     // public function getById($request, $response, $args)
     // {
