@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\Controller;
 use Illuminate\Database\Capsule\Manager as DB;
 use App\Models\Scheduling;
+use App\Models\SchedulingDetail;
 use App\Models\Person;
 use App\Models\Faction;
 use App\Models\Depart;
@@ -53,5 +54,57 @@ class SchedulingController extends Controller
                     ->get();
 
         return $res->withJson($members);
+    }
+
+    public function store($req, $res, $args)
+    {
+        try {
+            $post = (array)$req->getParsedBody();
+
+            $scheduling = new Scheduling;
+            $scheduling->division   = $post['division'];
+            $scheduling->month      = $post['month'];            
+            $scheduling->year       = $post['year'];
+            $scheduling->controller = $post['controller'];
+            // $scheduling->remark     = $post['remark'];
+
+            if($scheduling->save()) {
+                $schedulingId = $scheduling->id;
+
+                foreach($post['person_shifts'] as $ps) {
+                    $shiftsText = implode(',', $ps['shifts']);
+
+                    $detail = new SchedulingDetail;
+                    $detail->scheduling_id  = $schedulingId;
+                    $detail->person_id      = $ps['person']['person_id'];
+                    $detail->shifts         = $shiftsText;
+                }
+
+                // return $res
+                //         ->withStatus(200)
+                //         ->withHeader("Content-Type", "application/json")
+                //         ->write(json_encode([
+                //             'status' => 1,
+                //             'message' => 'Inserting successfully',
+                //             'scheduling' => $scheduling
+                //         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            } else {
+            //     return $res
+            //         ->withStatus(500)
+            //         ->withHeader("Content-Type", "application/json")
+            //         ->write(json_encode([
+            //             'status' => 0,
+            //             'message' => 'Something went wrong!!'
+            //         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            }
+        } catch (\Exception $ex) {
+            return $res
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status' => 0,
+                        'message' => $ex->getMessage()
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+        }
     }
 }
