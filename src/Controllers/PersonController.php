@@ -11,12 +11,24 @@ class PersonController extends Controller
     public function getAll($request, $response, $args)
     {
         $page = (int)$request->getQueryParam('page');
+        $fname = $request->getQueryParam('fname');
+        $depart = $request->getQueryParam('depart');
+        $division = $request->getQueryParam('division');
 
         $model = Person::whereNotIn('person_state', [6,7,8,9,99])
                     ->join('level', 'personal.person_id', '=', 'level.person_id')
                     ->where('level.faction_id', '5')
                     ->with('prefix','position','academic')
-                    ->with('memberOf','memberOf.depart');
+                    ->with('memberOf','memberOf.depart')
+                    ->when($fname != '', function($q) use ($fname) {
+                        $q->where('person_firstname', 'like', '%'.$fname.'%');
+                    });
+                    // ->when($depart != '', function($q) use ($depart) {
+                    //     $q->where('person_firstname', 'like', '%'.$depart.'%');
+                    // })
+                    // ->when($division != '', function($q) use ($division) {
+                    //     $q->where('person_firstname', 'like', '%'.$division.'%');
+                    // });
 
         $reg = paginate($model, 10, $page, $request);
         
