@@ -42,7 +42,7 @@ $app->group('/api', function(Slim\App $app) {
 
     $app->get('/schedulings', 'SchedulingController:getAll');
     $app->get('/schedulings/{id}', 'SchedulingController:getById');
-    $app->get('/schedulings/add/initForm', 'SchedulingController:initForm');
+    $app->get('/schedulings/add/init-form', 'SchedulingController:initForm');
     $app->get('/schedulings/member-of/{division}', 'SchedulingController:getMemberOfDivision');
     $app->post('/schedulings', 'SchedulingController:store');
 
