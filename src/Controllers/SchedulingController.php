@@ -36,21 +36,16 @@ class SchedulingController extends Controller
 
     public function getById($req, $res, $args)
     {
-        $scheduling = Scheduling::find($args['id'])->with('shifts','division')->first();
-        // $memberOfDep = Person::join('level', 'level.person_id', '=', 'personal.person_id')
-        //                     ->where([
-        //                         'level.faction_id'    => '5',
-        //                         'level.depart_id'     => $depart,
-        //                     ])
-        //                     ->where('person_state', '1')
-        //                     ->get();
+        $scheduling = Scheduling::find($args['id'])
+                        ->with('shifts','division')
+                        ->with('shifts.person','shifts.person.prefix','shifts.person.position')
+                        ->first();
 
         return $res
                 ->withStatus(200)
                 ->withHeader("Content-Type", "application/json")
                 ->write(json_encode([
-                    'scheduling'    => $scheduling,
-                    // 'memberOfDep'   => $memberOfDep
+                    'scheduling'    => $scheduling
                 ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
     }
 

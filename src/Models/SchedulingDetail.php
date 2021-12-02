@@ -7,4 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class SchedulingDetail extends Model
 {
     protected $table = "scheduling_detail";
+
+    public function person()
+    {
+        return $this->belongsTo(Person::class, 'person_id', 'person_id');
+    }
 }
