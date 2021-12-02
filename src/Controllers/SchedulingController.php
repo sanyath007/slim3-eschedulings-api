@@ -66,6 +66,8 @@ class SchedulingController extends Controller
             $scheduling->month          = $post['month'];            
             $scheduling->year           = $post['year'];
             $scheduling->controller     = $post['controller'];
+            $scheduling->total_persons  = $post['total_persons'];
+            $scheduling->total_shifts   = $post['total_shifts'];
             // $scheduling->remark     = $post['remark'];
 
             if($scheduling->save()) {
