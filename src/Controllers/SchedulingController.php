@@ -62,10 +62,10 @@ class SchedulingController extends Controller
             $post = (array)$req->getParsedBody();
 
             $scheduling = new Scheduling;
-            $scheduling->division   = $post['division'];
-            $scheduling->month      = $post['month'];            
-            $scheduling->year       = $post['year'];
-            $scheduling->controller = $post['controller'];
+            $scheduling->division_id    = $post['division'];
+            $scheduling->month          = $post['month'];            
+            $scheduling->year           = $post['year'];
+            $scheduling->controller     = $post['controller'];
             // $scheduling->remark     = $post['remark'];
 
             if($scheduling->save()) {
@@ -78,6 +78,7 @@ class SchedulingController extends Controller
                     $detail->scheduling_id  = $schedulingId;
                     $detail->person_id      = $ps['person']['person_id'];
                     $detail->shifts         = $shiftsText;
+                    $detail->save();
                 }
 
                 // return $res
