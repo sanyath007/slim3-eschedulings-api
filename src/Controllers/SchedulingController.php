@@ -83,22 +83,22 @@ class SchedulingController extends Controller
                     $detail->save();
                 }
 
-                // return $res
-                //         ->withStatus(200)
-                //         ->withHeader("Content-Type", "application/json")
-                //         ->write(json_encode([
-                //             'status' => 1,
-                //             'message' => 'Inserting successfully',
-                //             'scheduling' => $scheduling
-                //         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+                return $res
+                        ->withStatus(200)
+                        ->withHeader("Content-Type", "application/json")
+                        ->write(json_encode([
+                            'status' => 1,
+                            'message' => 'Inserting successfully',
+                            'scheduling' => $scheduling
+                        ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             } else {
-            //     return $res
-            //         ->withStatus(500)
-            //         ->withHeader("Content-Type", "application/json")
-            //         ->write(json_encode([
-            //             'status' => 0,
-            //             'message' => 'Something went wrong!!'
-            //         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+                return $res
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status' => 0,
+                        'message' => 'Something went wrong!!'
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             }
         } catch (\Exception $ex) {
             return $res
