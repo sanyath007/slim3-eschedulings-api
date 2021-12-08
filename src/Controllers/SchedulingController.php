@@ -101,7 +101,7 @@ class SchedulingController extends Controller
             $scheduling->controller     = $post['controller'];
             $scheduling->total_persons  = $post['total_persons'];
             $scheduling->total_shifts   = $post['total_shifts'];
-            // $scheduling->remark     = $post['remark'];
+            $scheduling->remark         = $post['remark'];
 
             if($scheduling->save()) {
                 $schedulingId = $scheduling->id;
