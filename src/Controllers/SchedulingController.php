@@ -11,6 +11,7 @@ use App\Models\Faction;
 use App\Models\Depart;
 use App\Models\Division;
 use App\Models\MemberOf;
+use App\Models\Shift;
 
 class SchedulingController extends Controller
 {
@@ -55,6 +56,7 @@ class SchedulingController extends Controller
             'factions'      => Faction::all(),
             'departs'       => Depart::all(),
             'divisions'     => Division::all(),
+            'shifts'        => Shift::all(),
         ]);
     }
 
