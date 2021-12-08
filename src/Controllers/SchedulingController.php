@@ -12,6 +12,7 @@ use App\Models\Depart;
 use App\Models\Division;
 use App\Models\MemberOf;
 use App\Models\Shift;
+use App\Models\Holiday;
 
 class SchedulingController extends Controller
 {
@@ -57,6 +58,7 @@ class SchedulingController extends Controller
             'departs'       => Depart::all(),
             'divisions'     => Division::all(),
             'shifts'        => Shift::all(),
+            'holidays'      => Holiday::all(),
         ]);
     }
 
