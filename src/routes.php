@@ -46,6 +46,8 @@ $app->group('/api', function(Slim\App $app) {
     $app->get('/schedulings/member-of/{division}', 'SchedulingController:getMemberOfDivision');
     $app->post('/schedulings', 'SchedulingController:store');
 
+    $app->get('/shifts', 'ShiftController:getAll');
+
     /** Routes to person db */
     $app->get('/departs', 'DepartController:getAll');
     $app->get('/departs/{id}', 'DepartController:getById');

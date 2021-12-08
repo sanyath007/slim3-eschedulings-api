@@ -91,6 +91,10 @@ $container['SchedulingController'] = function($c) {
     return new App\Controllers\SchedulingController($c);
 };
 
+$container['ShiftController'] = function($c) {
+    return new App\Controllers\ShiftController($c);
+};
+
 /** Person Controllers */
 $container['PersonController'] = function($c) {
     return new App\Controllers\PersonController($c);
