@@ -75,6 +75,20 @@ class SchedulingController extends Controller
         return $res->withJson($members);
     }
 
+    public function getMemberOfDepart($req, $res, $args)
+    {
+        $members = Person::join('level', 'level.person_id', '=', 'personal.person_id')
+                    ->where([
+                        'level.faction_id'  => '5',
+                        'level.depart_id'     => $args['depart'],
+                    ])
+                    ->with('prefix','position')
+                    ->where('person_state', '1')
+                    ->get();
+
+        return $res->withJson($members);
+    }
+
     public function store($req, $res, $args)
     {
         try {
