@@ -15,7 +15,7 @@ class LoginController extends Controller
 
         if($this->auth->attempt($params['username'], $params['password'])) {
             $now = new \DateTime();
-            $future = new \DateTime("+30 minutes");
+            $future = new \DateTime("+60 minutes");
             $jti = (new Base62)->encode(random_bytes(16));
             $user = $this->auth->getUser();
             
