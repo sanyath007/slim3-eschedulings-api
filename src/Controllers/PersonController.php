@@ -40,18 +40,32 @@ class PersonController extends Controller
                 ->withHeader("Content-Type", "application/json")
                 ->write($data);
     }
-    
-    // public function getById($request, $response, $args)
-    // {
-    //     $reg = Registration::where('id', $args['id'])
-    //                         ->with('patient','bed')
-    //                         ->first();
 
-    //     return $response
-    //             ->withStatus(200)
-    //             ->withHeader("Content-Type", "application/json")
-    //             ->write(json_encode($reg, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
-    // }
+    public function getById($request, $response, $args)
+    {
+        $person = Person::where('person_id', $args['id'])
+                    ->with('prefix','position')
+                    ->first();
+        
+        return $response
+                ->withStatus(200)
+                ->withHeader("Content-Type", "application/json")
+                ->write(json_encode($person, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+    }
+
+    public function getHeadOfFaction($request, $response, $args)
+    {
+        $person = Person::join('level', 'personal.person_id', '=', 'level.person_id')
+                    ->where('level.faction_id', $args['faction'])
+                    ->where('level.duty_id', '1')
+                    ->with('prefix','position')
+                    ->first();
+        
+        return $response
+                ->withStatus(200)
+                ->withHeader("Content-Type", "application/json")
+                ->write(json_encode($person, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+    }
 
     // public function store($request, $response, $args)
     // {
