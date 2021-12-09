@@ -49,6 +49,8 @@ $app->group('/api', function(Slim\App $app) {
 
     $app->get('/shifts', 'ShiftController:getAll');
 
+    $app->get('/holidays', 'HolidayController:getAll');
+
     /** Routes to person db */
     $app->get('/departs', 'DepartController:getAll');
     $app->get('/departs/{id}', 'DepartController:getById');
