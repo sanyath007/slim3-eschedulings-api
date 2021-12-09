@@ -21,11 +21,15 @@ class SchedulingController extends Controller
         $depart     = $req->getQueryParam('depart');
         $division   = $req->getQueryParam('division');
         $month      = $req->getQueryParam('month');
-        $sdate = $month. '-01';
-        $edate = date('Y-m-t', strtotime($sdate));
+        $sdate      = $month. '-01';
+        $edate      = date('Y-m-t', strtotime($sdate));
 
         return $res->withJson([
-            'schedulings'   => Scheduling::with('shifts','division')->get(),
+            'schedulings'   => Scheduling::with('shifts','division')
+                                ->when($month != '', function($q) use ($month) {
+                                    $q->where('month', $month);
+                                })
+                                ->get(),
             'memberOfDep'   => Person::join('level', 'level.person_id', '=', 'personal.person_id')
                                 ->where([
                                     'level.faction_id'    => '5',
