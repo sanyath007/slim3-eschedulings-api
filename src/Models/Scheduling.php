@@ -17,4 +17,9 @@ class Scheduling extends Model
     {
         return $this->belongsTo(Division::class, 'division_id', 'ward_id');
     }
+
+    public function controller()
+    {
+        return $this->belongsTo(Person::class, 'controller', 'person_id');
+    }
 }

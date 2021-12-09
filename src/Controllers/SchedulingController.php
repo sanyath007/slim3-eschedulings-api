@@ -43,7 +43,7 @@ class SchedulingController extends Controller
     public function getById($req, $res, $args)
     {
         $scheduling = Scheduling::where('id', $args['id'])
-                        ->with('shifts','division')
+                        ->with('shifts','division','controller')
                         ->with('shifts.person','shifts.person.prefix','shifts.person.position')
                         ->first();
 
