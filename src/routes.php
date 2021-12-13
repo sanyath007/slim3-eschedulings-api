@@ -46,6 +46,8 @@ $app->group('/api', function(Slim\App $app) {
     $app->get('/schedulings/member-of/depart/{depart}', 'SchedulingController:getMemberOfDepart');
     $app->get('/schedulings/member-of/division/{division}', 'SchedulingController:getMemberOfDivision');
     $app->post('/schedulings', 'SchedulingController:store');
+    $app->put('/schedulings/{id}', 'SchedulingController:update');
+    $app->delete('/schedulings/{id}', 'SchedulingController:delete');
 
     $app->get('/shifts', 'ShiftController:getAll');
 
