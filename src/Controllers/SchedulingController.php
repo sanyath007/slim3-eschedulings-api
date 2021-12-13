@@ -26,6 +26,8 @@ class SchedulingController extends Controller
 
         return $res->withJson([
             'schedulings'   => Scheduling::with('shifts','division')
+                                ->with('shifts.person')
+                                ->with('shifts.person.prefix','shifts.person.position')
                                 ->when($month != '', function($q) use ($month) {
                                     $q->where('month', $month);
                                 })
@@ -44,7 +46,8 @@ class SchedulingController extends Controller
     {
         $scheduling = Scheduling::where('id', $args['id'])
                         ->with('shifts','division','controller')
-                        ->with('shifts.person','shifts.person.prefix','shifts.person.position')
+                        ->with('shifts.person')
+                        ->with('shifts.person.prefix','shifts.person.position')
                         ->first();
 
         return $res
