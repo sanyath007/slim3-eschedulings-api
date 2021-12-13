@@ -214,17 +214,7 @@ class SchedulingController extends Controller
 
             if($scheduling->delete()) {
                 /** TODO: To manipulate scheduling_detail data on scheduling is deleted */
-                // $schedulingId = $scheduling->id;
-
-                // foreach($post['person_shifts'] as $ps) {
-                //     $shiftsText = implode(',', $ps['shifts']);
-
-                //     $detail = new SchedulingDetail;
-                //     $detail->scheduling_id  = $schedulingId;
-                //     $detail->person_id      = $ps['person']['person_id'];
-                //     $detail->shifts         = $shiftsText;
-                //     $detail->save();
-                // }
+                $deletedDetail = SchedulingDetail::where('scheduling_id', $args['id'])->delete();
 
                 return $res
                         ->withStatus(200)
