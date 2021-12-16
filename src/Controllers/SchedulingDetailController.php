@@ -43,134 +43,33 @@ class SchedulingDetailController extends Controller
                 ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
     }
 
-    public function initForm($req, $res, $args)
-    {
-        return $res->withJson([
-            'factions'      => Faction::all(),
-            'departs'       => Depart::all(),
-            'divisions'     => Division::all(),
-            'shifts'        => Shift::all(),
-            'holidays'      => Holiday::all(),
-        ]);
-    }
-
-    public function getMemberOfDivision($req, $res, $args)
-    {
-        $members = Person::join('level', 'level.person_id', '=', 'personal.person_id')
-                    ->where([
-                        'level.faction_id'  => '5',
-                        'level.ward_id'     => $args['division'],
-                    ])
-                    ->where('person_state', '1')
-                    ->get();
-
-        return $res->withJson($members);
-    }
-
-    public function getMemberOfDepart($req, $res, $args)
-    {
-        $members = Person::join('level', 'level.person_id', '=', 'personal.person_id')
-                    ->where([
-                        'level.faction_id'  => '5',
-                        'level.depart_id'     => $args['depart'],
-                    ])
-                    ->with('prefix','position')
-                    ->where('person_state', '1')
-                    ->get();
-
-        return $res->withJson($members);
-    }
-
-    public function store($req, $res, $args)
-    {
-        try {
-            $post = (array)$req->getParsedBody();
-
-            $scheduling = new Scheduling;
-            $scheduling->division_id    = $post['division'];
-            $scheduling->month          = $post['month'];            
-            $scheduling->year           = $post['year'];
-            $scheduling->controller     = $post['controller'];
-            $scheduling->total_persons  = $post['total_persons'];
-            $scheduling->total_shifts   = $post['total_shifts'];
-            $scheduling->remark         = $post['remark'];
-
-            if($scheduling->save()) {
-                $schedulingId = $scheduling->id;
-
-                foreach($post['person_shifts'] as $ps) {
-                    $shiftsText = implode(',', $ps['shifts']);
-
-                    $detail = new SchedulingDetail;
-                    $detail->scheduling_id  = $schedulingId;
-                    $detail->person_id      = $ps['person']['person_id'];
-                    $detail->shifts         = $shiftsText;
-                    $detail->save();
-                }
-
-                return $res
-                        ->withStatus(200)
-                        ->withHeader("Content-Type", "application/json")
-                        ->write(json_encode([
-                            'status' => 1,
-                            'message' => 'Inserting successfully',
-                            'scheduling' => $scheduling
-                        ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
-            } else {
-                return $res
-                    ->withStatus(500)
-                    ->withHeader("Content-Type", "application/json")
-                    ->write(json_encode([
-                        'status' => 0,
-                        'message' => 'Something went wrong!!'
-                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
-            }
-        } catch (\Exception $ex) {
-            return $res
-                    ->withStatus(500)
-                    ->withHeader("Content-Type", "application/json")
-                    ->write(json_encode([
-                        'status' => 0,
-                        'message' => $ex->getMessage()
-                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
-        }
-    }
-
     public function update($req, $res, $args)
     {
         try {
             $post = (array)$req->getParsedBody();
 
-            $scheduling = Scheduling::find($args['id']);
-            $scheduling->division_id    = $post['division'];
-            $scheduling->month          = $post['month'];            
-            $scheduling->year           = $post['year'];
-            $scheduling->controller     = $post['controller'];
-            $scheduling->total_persons  = $post['total_persons'];
-            $scheduling->total_shifts   = $post['total_shifts'];
-            $scheduling->remark         = $post['remark'];
+            $detail = SchedulingDetail::find($args['id']);
+            $detail->scheduling_id  = $post['scheduling_id'];
+            $detail->person_id      = $post['person_id'];
+            $detail->shifts         = $post['shifts'];
 
-            if($scheduling->save()) {
-                /** TODO: To manipulate scheduling_detail data on scheduling is updated */
-                $oldDetail = SchedulingDetail::where('scheduling_id', $args['id'])->delete();
-
-                foreach($post['person_shifts'] as $ps) {
-                    $shiftsText = implode(',', $ps['shifts']);
-
-                    $detail = new SchedulingDetail;
-                    $detail->scheduling_id  = $args['id'];
-                    $detail->person_id      = $ps['person']['person_id'];
-                    $detail->shifts         = $shiftsText;
-                    $detail->save();
-                }
+            if($detail->save()) {
+                /** 
+                 * To manipulate total_persons and total_shifts of schedulings data 
+                 * on scheduling_detail is updated 
+                */
+                // $scheduling = Scheduling::find($post['scheduling_id']);
+                // $scheduling->total_persons  = $post['total_persons'];
+                // $scheduling->total_shifts   = $post['total_shifts'];
+                // $scheduling->save();
 
                 return $res
                         ->withStatus(200)
                         ->withHeader("Content-Type", "application/json")
                         ->write(json_encode([
-                            'status' => 1,
-                            'message' => 'Updating successfully',
-                            'scheduling' => $scheduling
+                            'status'    => 1,
+                            'message'   => 'Updating successfully',
+                            '$detail'   => $detail
                         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             } else {
                 return $res
