@@ -12,4 +12,9 @@ class SchedulingDetail extends Model
     {
         return $this->belongsTo(Person::class, 'person_id', 'person_id');
     }
+
+    public function scheduling()
+    {
+        return $this->belongsTo(Scheduling::class, 'scheduling_id', 'id');
+    }
 }

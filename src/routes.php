@@ -49,6 +49,10 @@ $app->group('/api', function(Slim\App $app) {
     $app->put('/schedulings/{id}', 'SchedulingController:update');
     $app->delete('/schedulings/{id}', 'SchedulingController:delete');
 
+    $app->get('/schedule-details/{scheduleId}/scheduling', 'SchedulingDetailController:getAll');
+    $app->get('/schedule-details/{id}', 'SchedulingDetailController:getById');
+    $app->put('/schedule-details/{id}', 'SchedulingDetailController:update');
+
     $app->get('/shifts', 'ShiftController:getAll');
 
     $app->get('/holidays', 'HolidayController:getAll');
