@@ -99,6 +99,10 @@ $container['ShiftController'] = function($c) {
     return new App\Controllers\ShiftController($c);
 };
 
+$container['ShiftSwappingController'] = function($c) {
+    return new App\Controllers\ShiftSwappingController($c);
+};
+
 $container['HolidayController'] = function($c) {
     return new App\Controllers\HolidayController($c);
 };
