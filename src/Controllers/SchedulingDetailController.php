@@ -12,6 +12,7 @@ use App\Models\Depart;
 use App\Models\Division;
 use App\Models\MemberOf;
 use App\Models\Shift;
+use App\Models\ShiftSwapping;
 use App\Models\Holiday;
 
 class SchedulingDetailController extends Controller
@@ -107,6 +108,57 @@ class SchedulingDetailController extends Controller
                             'status'    => 1,
                             'message'   => 'Deleting successfully',
                             'id'        => $args['id']
+                        ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            } else {
+                return $res
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status' => 0,
+                        'message' => 'Something went wrong!!'
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            }
+        } catch (\Exception $ex) {
+            return $res
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status' => 0,
+                        'message' => $ex->getMessage()
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+        }
+    }
+
+    
+    public function swap($req, $res, $args)
+    {
+        try {
+            $post = (array)$req->getParsedBody();
+
+            $detail = SchedulingDetail::find($args['id']);
+            $detail->shifts = $post['shifts'];
+
+            if($detail->save()) {
+                /** To add new ShiftSwapping record */
+                $swap = new ShiftSwapping;
+                $swap->scheduling_detail_id = $post['scheduling_detail_id'];
+                $swap->request_date         = date('Y-m-d');
+                $swap->owner                = $post['owner'];
+                $swap->delegator            = $post['delegator'];
+                $swap->reason               = $post['reason'];
+                $swap->swap_date            = $post['swap_date'];
+                $swap->swap_shift           = $post['swap_shift'];
+                $swap->represent_date       = $post['represent_date'];
+                $swap->represent_shift      = $post['represent_shift'];
+                $swap->save();
+
+                return $res
+                        ->withStatus(200)
+                        ->withHeader("Content-Type", "application/json")
+                        ->write(json_encode([
+                            'status'    => 1,
+                            'message'   => 'Updating successfully',
+                            '$detail'   => $detail
                         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             } else {
                 return $res
