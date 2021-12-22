@@ -70,15 +70,15 @@ class SchedulingDetailController extends Controller
                         ->write(json_encode([
                             'status'    => 1,
                             'message'   => 'Updating successfully',
-                            '$detail'   => $detail
+                            'detail'    => $detail
                         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             } else {
                 return $res
                     ->withStatus(500)
                     ->withHeader("Content-Type", "application/json")
                     ->write(json_encode([
-                        'status' => 0,
-                        'message' => 'Something went wrong!!'
+                        'status'    => 0,
+                        'message'   => 'Something went wrong!!'
                     ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             }
         } catch (\Exception $ex) {
@@ -86,8 +86,8 @@ class SchedulingDetailController extends Controller
                     ->withStatus(500)
                     ->withHeader("Content-Type", "application/json")
                     ->write(json_encode([
-                        'status' => 0,
-                        'message' => $ex->getMessage()
+                        'status'    => 0,
+                        'message'   => $ex->getMessage()
                     ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
         }
     }
@@ -114,8 +114,8 @@ class SchedulingDetailController extends Controller
                     ->withStatus(500)
                     ->withHeader("Content-Type", "application/json")
                     ->write(json_encode([
-                        'status' => 0,
-                        'message' => 'Something went wrong!!'
+                        'status'    => 0,
+                        'message'   => 'Something went wrong!!'
                     ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             }
         } catch (\Exception $ex) {
@@ -123,13 +123,12 @@ class SchedulingDetailController extends Controller
                     ->withStatus(500)
                     ->withHeader("Content-Type", "application/json")
                     ->write(json_encode([
-                        'status' => 0,
-                        'message' => $ex->getMessage()
+                        'status'    => 0,
+                        'message'   => $ex->getMessage()
                     ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
         }
     }
 
-    
     public function swap($req, $res, $args)
     {
         try {
@@ -158,15 +157,15 @@ class SchedulingDetailController extends Controller
                         ->write(json_encode([
                             'status'    => 1,
                             'message'   => 'Updating successfully',
-                            '$detail'   => $detail
+                            'swap'      => $swap
                         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             } else {
                 return $res
                     ->withStatus(500)
                     ->withHeader("Content-Type", "application/json")
                     ->write(json_encode([
-                        'status' => 0,
-                        'message' => 'Something went wrong!!'
+                        'status'    => 0,
+                        'message'   => 'Something went wrong!!'
                     ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             }
         } catch (\Exception $ex) {
@@ -174,8 +173,8 @@ class SchedulingDetailController extends Controller
                     ->withStatus(500)
                     ->withHeader("Content-Type", "application/json")
                     ->write(json_encode([
-                        'status' => 0,
-                        'message' => $ex->getMessage()
+                        'status'    => 0,
+                        'message'   => $ex->getMessage()
                     ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
         }
     }
