@@ -134,22 +134,30 @@ class SchedulingDetailController extends Controller
         try {
             $post = (array)$req->getParsedBody();
 
-            $detail = SchedulingDetail::find($args['id']);
-            $detail->shifts = $post['shifts'];
+            /** To add new ShiftSwapping record */
+            $swap = new ShiftSwapping;
+            $swap->owner_detail_id  = $args['id'];              // รหัสเวรที่จะขอเปลี่ยน
+            $swap->owner_date       = $post['owner_date'];      // วันที่จะขอเปลี่ยน
+            $swap->owner_shift      = $post['owner_shift'];     // เวรที่จะขอเปลี่ยน
+            $swap->reason           = $post['reason'];
+            $swap->delegator        = $post['delegator'];       // ผู้ปฏิบัติงานแทน
+            $swap->have_swap        = $post['have_swap'];
 
-            if($detail->save()) {
-                /** To add new ShiftSwapping record */
-                $swap = new ShiftSwapping;
-                $swap->scheduling_detail_id = $post['scheduling_detail_id'];
-                $swap->request_date         = date('Y-m-d');
-                $swap->owner                = $post['owner'];
-                $swap->delegator            = $post['delegator'];
-                $swap->reason               = $post['reason'];
-                $swap->swap_date            = $post['swap_date'];
-                $swap->swap_shift           = $post['swap_shift'];
-                $swap->represent_date       = $post['represent_date'];
-                $swap->represent_shift      = $post['represent_shift'];
-                $swap->save();
+            $swap->swap_detail_id   = $post['swap_detail_id'];  // รหัสเวรที่จะปฏิบัติงานแทน
+            $swap->swap_date        = $post['swap_date'];       // วันที่จะปฏิบัติงานแทน
+            $swap->swap_shift       = $post['swap_shift'];      // เวรที่จะปฏิบัติงานแทน
+            $swap->status           = 'REQUESTED';
+
+            if($swap->save()) {
+                /** Update owner's shift */
+                $owner = SchedulingDetail::find($args['id']);
+                $owner->shifts = $post['owner_shifts'];
+                $owner->save();
+
+                /** Update delegator's shift */
+                $delegator = SchedulingDetail::find($post['swap_detail_id']);
+                $delegator->shifts = $post['delegator_shifts'];
+                $delegator->save();
 
                 return $res
                         ->withStatus(200)
@@ -157,7 +165,53 @@ class SchedulingDetailController extends Controller
                         ->write(json_encode([
                             'status'    => 1,
                             'message'   => 'Updating successfully',
-                            'swap'      => $swap
+                        ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            } else {
+                return $res
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status'    => 0,
+                        'message'   => 'Something went wrong!!'
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            }
+        } catch (\Exception $ex) {
+            return $res
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status'    => 0,
+                        'message'   => $ex->getMessage()
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+        }
+    }
+
+    public function approve($req, $res, $args)
+    {
+        try {
+            $post = (array)$req->getParsedBody();
+
+            /** To add new ShiftSwapping record */
+            $swap = ShiftSwapping::find($args['id']);
+            $swap->status = 'APPROVED';
+
+            if($swap->save()) {
+                /** Update owner's shift */
+                $owner = SchedulingDetail::find($swap->owner_detail_id);
+                $owner->shifts = $post['owner_shifts'];
+                $owner->save();
+
+                /** Update delegator's shift */
+                $delegator = SchedulingDetail::find($swap->swap_detail_id);
+                $delegator->shifts = $post['delegator_shifts'];
+                $delegator->save();
+
+                return $res
+                        ->withStatus(200)
+                        ->withHeader("Content-Type", "application/json")
+                        ->write(json_encode([
+                            'status'    => 1,
+                            'message'   => 'Updating successfully',
                         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             } else {
                 return $res
