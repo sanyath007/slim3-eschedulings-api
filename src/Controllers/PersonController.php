@@ -12,13 +12,13 @@ class PersonController extends Controller
     {
         $page       = (int)$request->getQueryParam('page');
         $fname      = $request->getQueryParam('fname');
-        $faction    = $request->getQueryParam('faction');
+        $faction    = empty($request->getQueryParam('faction')) ? '5' : $request->getQueryParam('faction');
         $depart     = $request->getQueryParam('depart');
         $division   = $request->getQueryParam('division');
 
         $model = Person::whereNotIn('person_state', [6,7,8,9,99])
                     ->join('level', 'personal.person_id', '=', 'level.person_id')
-                    ->where('level.faction_id', '5')
+                    ->where('level.faction_id', $faction)
                     ->when($depart != '', function($q) use ($depart) {
                         $q->where('level.depart_id', $depart);
                     })
