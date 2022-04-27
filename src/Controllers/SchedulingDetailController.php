@@ -92,6 +92,48 @@ class SchedulingDetailController extends Controller
         }
     }
 
+    public function oT($req, $res, $args)
+    {
+        try {
+            $post = (array)$req->getParsedBody();
+
+            $shiftsText = implode(',', $post['ot_shifts']);
+
+            $detail = SchedulingDetail::find($args['id']);
+            $detail->ot_shifts      = $shiftsText;
+            $detail->total_shift    = $post['total_shift'];
+            $detail->working        = $post['working'];
+            $detail->ot             = $post['ot'];
+
+            if($detail->save()) {
+                return $res
+                        ->withStatus(200)
+                        ->withHeader("Content-Type", "application/json")
+                        ->write(json_encode([
+                            'status'    => 1,
+                            'message'   => 'Updating successfully',
+                            'detail'    => $detail
+                        ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            } else {
+                return $res
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status'    => 0,
+                        'message'   => 'Something went wrong!!'
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            }
+        } catch (\Exception $ex) {
+            return $res
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status'    => 0,
+                        'message'   => $ex->getMessage()
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+        }
+    }
+
     public function delete($req, $res, $args)
     {
         try {

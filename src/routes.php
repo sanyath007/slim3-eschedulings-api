@@ -53,6 +53,7 @@ $app->group('/api', function(Slim\App $app) {
     $app->get('/schedule-details/{id}', 'SchedulingDetailController:getById');
     $app->put('/schedule-details/{id}', 'SchedulingDetailController:update');
     $app->put('/schedule-details/{id}/swap', 'SchedulingDetailController:swap');
+    $app->put('/schedule-details/{id}/ot', 'SchedulingDetailController:oT');
 
     $app->get('/shifts', 'ShiftController:getAll');
 
