@@ -100,9 +100,8 @@ class SchedulingDetailController extends Controller
             $shiftsText = implode(',', $post['ot_shifts']);
 
             $detail = SchedulingDetail::find($args['id']);
-            $detail->ot_shifts      = $shiftsText;
-            $detail->total_shift    = $post['total_shift'];
             $detail->working        = $post['working'];
+            $detail->ot_shifts      = $shiftsText;
             $detail->ot             = $post['ot'];
 
             if($detail->save()) {

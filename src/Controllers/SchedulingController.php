@@ -114,6 +114,10 @@ class SchedulingController extends Controller
                     $detail->scheduling_id  = $schedulingId;
                     $detail->person_id      = $ps['person']['person_id'];
                     $detail->shifts         = $shiftsText;
+                    $detail->n              = $ps['n']; // เวรดึก
+                    $detail->m              = $ps['m']; // เวรเช้า
+                    $detail->e              = $ps['e']; // เวรบ่าย
+                    $detail->b              = $ps['b']; // เวร BD
                     $detail->total_shift    = $ps['total_shift'];
                     $detail->working        = 0;
                     $detail->ot             = 0;
