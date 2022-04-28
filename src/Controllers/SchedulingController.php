@@ -96,6 +96,7 @@ class SchedulingController extends Controller
             $post = (array)$req->getParsedBody();
 
             $scheduling = new Scheduling;
+            $scheduling->depart_id      = $post['depart'];
             $scheduling->division_id    = $post['division'];
             $scheduling->month          = $post['month'];            
             $scheduling->year           = $post['year'];
@@ -158,6 +159,7 @@ class SchedulingController extends Controller
             $post = (array)$req->getParsedBody();
 
             $scheduling = Scheduling::find($args['id']);
+            $scheduling->depart_id      = $post['depart'];
             $scheduling->division_id    = $post['division'];
             $scheduling->month          = $post['month'];            
             $scheduling->year           = $post['year'];
