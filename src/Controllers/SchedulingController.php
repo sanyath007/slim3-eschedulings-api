@@ -161,7 +161,7 @@ class SchedulingController extends Controller
             $scheduling->division_id    = $post['division'];
             $scheduling->month          = $post['month'];            
             $scheduling->year           = $post['year'];
-            $scheduling->controller     = $post['controller'];
+            $scheduling->controller_id  = $post['controller'];
             $scheduling->total_persons  = $post['total_persons'];
             $scheduling->total_shifts   = $post['total_shifts'];
             $scheduling->remark         = $post['remark'];
@@ -177,6 +177,13 @@ class SchedulingController extends Controller
                     $detail->scheduling_id  = $args['id'];
                     $detail->person_id      = $ps['person']['person_id'];
                     $detail->shifts         = $shiftsText;
+                    $detail->n              = $ps['n']; // เวรดึก
+                    $detail->m              = $ps['m']; // เวรเช้า
+                    $detail->e              = $ps['e']; // เวรบ่าย
+                    $detail->b              = $ps['b']; // เวร BD
+                    $detail->total          = $ps['total_shift'];
+                    $detail->working        = 0;
+                    $detail->ot             = 0;
                     $detail->save();
                 }
 
