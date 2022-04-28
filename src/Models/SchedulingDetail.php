@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SchedulingDetail extends Model
 {
-    protected $table = "scheduling_detail";
+    protected $table = "scheduling_details";
 
     public function person()
     {

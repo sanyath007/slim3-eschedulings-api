@@ -13,6 +13,11 @@ class Scheduling extends Model
         return $this->hasMany(SchedulingDetail::class, 'scheduling_id', 'id');
     }
 
+    public function depart()
+    {
+        return $this->belongsTo(Depart::class, 'depart_id', 'depart_id');
+    }
+
     public function division()
     {
         return $this->belongsTo(Division::class, 'division_id', 'ward_id');
@@ -20,6 +25,6 @@ class Scheduling extends Model
 
     public function controller()
     {
-        return $this->belongsTo(Person::class, 'controller', 'person_id');
+        return $this->belongsTo(Person::class, 'controller_id', 'person_id');
     }
 }

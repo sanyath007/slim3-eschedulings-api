@@ -25,8 +25,8 @@ class SchedulingController extends Controller
         $edate      = date('Y-m-t', strtotime($sdate));
 
         return $res->withJson([
-            'schedulings'   => Scheduling::with('shifts','division')
-                                ->with('shifts.person')
+            'schedulings'   => Scheduling::with('depart','division','controller')
+                                ->with('shifts','shifts.person')
                                 ->with('shifts.person.prefix','shifts.person.position')
                                 ->when($month != '', function($q) use ($month) {
                                     $q->where('month', $month);
@@ -45,8 +45,8 @@ class SchedulingController extends Controller
     public function getById($req, $res, $args)
     {
         $scheduling = Scheduling::where('id', $args['id'])
-                        ->with('shifts','division','controller')
-                        ->with('shifts.person')
+                        ->with('depart','division','controller')
+                        ->with('shifts','shifts.person')
                         ->with('shifts.person.prefix','shifts.person.position')
                         ->first();
 
@@ -99,7 +99,7 @@ class SchedulingController extends Controller
             $scheduling->division_id    = $post['division'];
             $scheduling->month          = $post['month'];            
             $scheduling->year           = $post['year'];
-            $scheduling->controller     = $post['controller'];
+            $scheduling->controller_id  = $post['controller'];
             $scheduling->total_persons  = $post['total_persons'];
             $scheduling->total_shifts   = $post['total_shifts'];
             $scheduling->remark         = $post['remark'];
@@ -118,7 +118,7 @@ class SchedulingController extends Controller
                     $detail->m              = $ps['m']; // เวรเช้า
                     $detail->e              = $ps['e']; // เวรบ่าย
                     $detail->b              = $ps['b']; // เวร BD
-                    $detail->total_shift    = $ps['total_shift'];
+                    $detail->total          = $ps['total_shift'];
                     $detail->working        = 0;
                     $detail->ot             = 0;
                     $detail->save();

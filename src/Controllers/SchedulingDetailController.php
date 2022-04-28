@@ -20,10 +20,11 @@ class SchedulingDetailController extends Controller
     public function getAll($req, $res, $args)
     {
         return $res->withJson([
-            'details'   => SchedulingDetail::where('scheduling_id', $args['scheduleId'])
-                            ->with('person')
+            'details'   => SchedulingDetail::with('person')
                             ->with('person.prefix','person.position')
-                            ->with('scheduling','scheduling.division','scheduling.controller')
+                            ->with('scheduling','scheduling.division','scheduling.depart')
+                            ->with('scheduling.controller')
+                            ->where('scheduling_id', $args['scheduleId'])
                             ->get()
         ]);
     }
@@ -33,7 +34,8 @@ class SchedulingDetailController extends Controller
         $detail = SchedulingDetail::where('id', $args['id'])
                         ->with('person')
                         ->with('person.prefix','person.position')
-                        ->with('scheduling','scheduling.division','scheduling.controller')
+                        ->with('scheduling','scheduling.division','scheduling.depart')
+                        ->with('scheduling.controller')
                         ->first();
 
         return $res
